@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>شركة الرحمة | النظام المحاسبي</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root{--navy:#123b5d;--green:#15956f;--bg:#f4f7fb;--card:#fff;--text:#19324a;--muted:#718096;--line:#e5edf4;--danger:#c0392b;--shadow:0 10px 28px rgba(18,59,93,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}
@@ -21,7 +21,7 @@ button{cursor:pointer;border:0}.hidden{display:none!important}.app{min-height:10
     <div id="loginMsg"></div>
     <div class="field"><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="email"></div>
     <div class="field" style="margin-top:10px"><label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password"></div>
-    <div class="actions"><button class="btn" id="loginBtn">دخول</button><button class="btn secondary" id="signupBtn">إنشاء حساب</button></div>
+    <div class="actions"><button type="button" class="btn" id="loginBtn">دخول</button><button type="button" class="btn secondary" id="signupBtn">إنشاء حساب</button></div>
   </div>
 </div>
 <div id="appView" class="app hidden">
@@ -74,13 +74,26 @@ async function boot(){
 function showLogin(extra=''){document.getElementById('appView').classList.add('hidden');document.getElementById('loginView').classList.remove('hidden');document.getElementById('loginMsg').innerHTML=extra}
 async function auth(mode){
  const email=document.getElementById('email').value.trim(), password=document.getElementById('password').value;
+ const loginBtn=document.getElementById('loginBtn'), signupBtn=document.getElementById('signupBtn');
  if(!email||!password){document.getElementById('loginMsg').innerHTML=msg('أدخل البريد وكلمة المرور.','error');return}
- const r=mode==='login'?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
- if(r.error){document.getElementById('loginMsg').innerHTML=msg(r.error.message,'error');return}
- if(mode==='signup'){document.getElementById('loginMsg').innerHTML=msg('تم إنشاء الحساب. إذا كان تأكيد البريد مفعلاً، أكّد البريد ثم اطلب تفعيل العضوية من مدير النظام.');return}
- boot();
+ if(!window.supabase){document.getElementById('loginMsg').innerHTML=msg('تعذر تحميل مكتبة تسجيل الدخول. حدّث الصفحة وحاول مرة أخرى.','error');return}
+ loginBtn.disabled=true; signupBtn.disabled=true; loginBtn.textContent='جارٍ الدخول...';
+ try{
+   const r=mode==='login'
+     ?await sb.auth.signInWithPassword({email,password})
+     :await sb.auth.signUp({email,password});
+   if(r.error){document.getElementById('loginMsg').innerHTML=msg(r.error.message,'error');return}
+   if(mode==='signup'){document.getElementById('loginMsg').innerHTML=msg('تم إنشاء الحساب. إذا كان تأكيد البريد مفعلاً، أكّد البريد ثم أعد تسجيل الدخول.');return}
+   await boot();
+ }catch(e){
+   document.getElementById('loginMsg').innerHTML=msg(e?.message||'حدث خطأ غير متوقع أثناء تسجيل الدخول.','error');
+ }finally{
+   loginBtn.disabled=false; signupBtn.disabled=false; loginBtn.textContent='دخول';
+ }
 }
-document.getElementById('loginBtn').onclick=()=>auth('login');document.getElementById('signupBtn').onclick=()=>auth('signup');
+document.getElementById('loginBtn').onclick=()=>auth('login');
+document.getElementById('signupBtn').onclick=()=>auth('signup');
+document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')auth('login')});
 document.getElementById('logoutBtn').onclick=async()=>{await sb.auth.signOut();showLogin()};
 
 function render(page){
