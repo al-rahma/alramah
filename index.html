@@ -3,39 +3,140 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>شركة الرحمة للاستقدام | النظام المحاسبي</title>
+<title>شركة الرحمة | النظام المحاسبي</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--navy:#123b5d;--green:#15956f;--bg:#f4f7fb;--card:#fff;--text:#19324a;--muted:#718096;--line:#e5edf4;--shadow:0 10px 28px rgba(18,59,93,.08)}
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}
-.app{min-height:100vh;display:flex}.side{width:255px;background:linear-gradient(180deg,#123b5d,#0c2e49);color:#fff;padding:22px 16px;position:fixed;right:0;top:0;bottom:0}.brand{display:flex;align-items:center;gap:12px;padding:10px 8px 26px;border-bottom:1px solid rgba(255,255,255,.14)}.logo{width:48px;height:48px;border-radius:14px;background:#fff;color:var(--green);display:grid;place-items:center;font-weight:900;font-size:22px}.brand b{display:block;font-size:16px}.brand small{opacity:.72}.nav{padding-top:18px}.nav a{display:flex;gap:11px;align-items:center;padding:13px 14px;margin:4px 0;border-radius:11px;color:#dceaf4;text-decoration:none}.nav a:hover,.nav a.active{background:rgba(255,255,255,.12);color:#fff}.main{width:calc(100% - 255px);margin-right:255px;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:24px}.top p{margin:6px 0 0;color:var(--muted)}.user{background:#fff;border:1px solid var(--line);padding:10px 14px;border-radius:12px}.hero{background:linear-gradient(120deg,#123b5d,#176a68);color:#fff;border-radius:20px;padding:24px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);margin-bottom:22px}.hero h2{margin:0 0 8px}.hero p{margin:0;opacity:.82}.hero .badge{background:rgba(255,255,255,.14);padding:12px 16px;border-radius:14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.stat{padding:18px}.stat .icon{font-size:22px}.stat small{display:block;color:var(--muted);margin-top:10px}.stat strong{font-size:25px;display:block;margin-top:6px}.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}.card{padding:20px}.card h3{margin:0 0 16px}.bars{height:210px;display:flex;align-items:flex-end;gap:12px;padding:20px 5px}.bar{flex:1;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#1e9a78,#17648d);position:relative}.bar span{position:absolute;bottom:-25px;right:50%;transform:translateX(50%);font-size:11px;color:var(--muted)}table{width:100%;border-collapse:collapse}th,td{text-align:right;padding:13px 8px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-weight:600}.status{padding:5px 9px;border-radius:20px;background:#e8f8f1;color:#16825f;font-size:11px}.modules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.module{padding:15px;border-radius:14px;background:#f8fbfd;border:1px solid var(--line);text-decoration:none;color:var(--text)}.module b{display:block;margin-bottom:7px}.module small{color:var(--muted)}.footer{margin-top:20px;text-align:center;color:var(--muted);font-size:12px}
-@media(max-width:1000px){.side{width:82px;padding:16px 10px}.brand div,.nav a span{display:none}.brand{justify-content:center}.nav a{justify-content:center}.main{width:calc(100% - 82px);margin-right:82px}.stats{grid-template-columns:repeat(2,1fr)}.modules{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.side{position:fixed;left:0;right:0;top:auto;width:100%;height:68px;padding:7px 10px;z-index:5}.brand{display:none}.nav{padding:0;display:flex;justify-content:space-around}.nav a{margin:0;padding:10px 8px;font-size:20px}.main{width:100%;margin:0;padding:15px;padding-bottom:85px}.top{align-items:flex-start}.top h1{font-size:19px}.user{font-size:11px}.hero{padding:18px;align-items:flex-start}.hero .badge{display:none}.stats{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:14px}.stat strong{font-size:19px}.grid{grid-template-columns:1fr}.modules{grid-template-columns:1fr 1fr}.card{padding:15px;overflow:auto}table{min-width:540px}}
+:root{--navy:#123b5d;--green:#15956f;--bg:#f4f7fb;--card:#fff;--text:#19324a;--muted:#718096;--line:#e5edf4;--danger:#c0392b;--shadow:0 10px 28px rgba(18,59,93,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0}.hidden{display:none!important}.app{min-height:100vh;display:flex}.side{width:255px;background:linear-gradient(180deg,#123b5d,#0c2e49);color:#fff;padding:22px 16px;position:fixed;right:0;top:0;bottom:0}.brand{display:flex;align-items:center;gap:12px;padding:10px 8px 26px;border-bottom:1px solid rgba(255,255,255,.14)}.logo{width:48px;height:48px;border-radius:14px;background:#fff;color:var(--green);display:grid;place-items:center;font-weight:900;font-size:22px}.brand b{display:block;font-size:16px}.brand small{opacity:.72}.nav{padding-top:18px}.nav button{width:100%;display:flex;gap:11px;align-items:center;padding:13px 14px;margin:4px 0;border-radius:11px;background:transparent;color:#dceaf4;text-align:right}.nav button:hover,.nav button.active{background:rgba(255,255,255,.12);color:#fff}.main{width:calc(100% - 255px);margin-right:255px;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:24px}.top p{margin:6px 0 0;color:var(--muted)}.user{background:#fff;border:1px solid var(--line);padding:10px 14px;border-radius:12px}.hero{background:linear-gradient(120deg,#123b5d,#176a68);color:#fff;border-radius:20px;padding:24px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);margin-bottom:22px}.hero h2{margin:0 0 8px}.hero p{margin:0;opacity:.82}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.stat{padding:18px}.stat small{display:block;color:var(--muted);margin-top:10px}.stat strong{font-size:25px;display:block;margin-top:6px}.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}.card{padding:20px;margin-bottom:18px}.card h3{margin:0 0 16px}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}.btn{background:var(--green);color:#fff;padding:10px 14px;border-radius:10px}.btn.secondary{background:#eef4f8;color:var(--navy)}.btn.danger{background:var(--danger)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:right;padding:12px 8px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-weight:600}.status{padding:5px 9px;border-radius:20px;background:#e8f8f1;color:#16825f;font-size:11px}.form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.form .full{grid-column:1/-1}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;outline:none}.field textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:8px;justify-content:flex-start;margin-top:8px}.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#123b5d,#176a68)}.login-card{width:min(440px,100%);background:#fff;border-radius:22px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.18)}.login-card h1{margin:0 0 8px}.login-card p{color:var(--muted);line-height:1.7}.notice{padding:12px;border-radius:10px;background:#fff8e6;color:#795900;margin:12px 0}.error{padding:12px;border-radius:10px;background:#fdecea;color:#8a1c12;margin:12px 0}.empty{padding:30px;text-align:center;color:var(--muted)}.footer{text-align:center;color:var(--muted);font-size:12px;margin:20px}
+@media(max-width:1000px){.side{width:82px;padding:16px 10px}.brand div,.nav button span{display:none}.brand{justify-content:center}.nav button{justify-content:center}.main{width:calc(100% - 82px);margin-right:82px}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.side{position:fixed;left:0;right:0;top:auto;width:100%;height:68px;padding:7px 10px;z-index:5}.brand{display:none}.nav{padding:0;display:flex;justify-content:space-around}.nav button{margin:0;padding:10px 8px;font-size:20px}.main{width:100%;margin:0;padding:15px 15px 85px}.top{align-items:flex-start}.top h1{font-size:19px}.user{font-size:11px}.hero{padding:18px}.stats{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:14px}.stat strong{font-size:19px}.grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}.form .full{grid-column:auto}.card{padding:15px}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="side">
-<div class="brand"><div class="logo">ر</div><div><b>شركة الرحمة</b><small>للاستقدام ونقل الخدمات</small></div></div>
-<nav class="nav">
-<a class="active" href="#">🏠 <span>الرئيسية</span></a><a href="#">🧾 <span>المبيعات والفواتير</span></a><a href="#">🛒 <span>المشتريات</span></a><a href="#">👥 <span>العملاء</span></a><a href="#">🏢 <span>الموردون</span></a><a href="#">📒 <span>القيود اليومية</span></a><a href="#">📊 <span>التقارير المالية</span></a><a href="#">⚙️ <span>الإعدادات</span></a>
-</nav>
-</aside>
-<main class="main">
-<header class="top"><div><h1>لوحة التحكم</h1><p>النظام المحاسبي — شركة الرحمة للاستقدام ونقل الخدمات</p></div><div class="user">👤 مدير النظام</div></header>
-<section class="hero"><div><h2>مرحباً بك في نظام الرحمة المحاسبي</h2><p>متابعة المبيعات والمشتريات والعملاء والتقارير المالية من شاشة واحدة.</p></div><div class="badge">آخر تحديث: اليوم</div></section>
-<section class="stats">
-<div class="stat"><div class="icon">💰</div><small>إجمالي المبيعات</small><strong>255,000 ر.س</strong></div>
-<div class="stat"><div class="icon">🛒</div><small>إجمالي المشتريات</small><strong>120,000 ر.س</strong></div>
-<div class="stat"><div class="icon">👥</div><small>عدد العملاء</small><strong>48</strong></div>
-<div class="stat"><div class="icon">📄</div><small>الفواتير</small><strong>132</strong></div>
-</section>
-<section class="grid">
-<div class="card"><h3>الإيرادات والمصروفات — آخر 6 أشهر</h3><div class="bars"><i class="bar" style="height:45%"><span>يناير</span></i><i class="bar" style="height:62%"><span>فبراير</span></i><i class="bar" style="height:55%"><span>مارس</span></i><i class="bar" style="height:76%"><span>أبريل</span></i><i class="bar" style="height:64%"><span>مايو</span></i><i class="bar" style="height:84%"><span>يونيو</span></i></div></div>
-<div class="card"><h3>آخر العمليات</h3><table><thead><tr><th>التاريخ</th><th>العملية</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody><tr><td>01/06/2024</td><td>فاتورة مبيعات</td><td>15,000</td><td><span class="status">مكتملة</span></td></tr><tr><td>01/06/2024</td><td>إيصال قبض</td><td>8,500</td><td><span class="status">مكتملة</span></td></tr><tr><td>31/05/2024</td><td>فاتورة شراء</td><td>12,000</td><td><span class="status">مكتملة</span></td></tr></tbody></table></div>
-</section>
-<section class="card" style="margin-top:18px"><h3>الوحدات الرئيسية</h3><div class="modules"><a class="module" href="#"><b>🧾 إدارة المبيعات</b><small>الفواتير، العملاء، تقارير المبيعات</small></a><a class="module" href="#"><b>🛒 إدارة المشتريات</b><small>فواتير الشراء والموردون</small></a><a class="module" href="#"><b>📦 إدارة الخدمات</b><small>الأصناف والخدمات وحركتها</small></a><a class="module" href="#"><b>📒 القيود اليومية</b><small>تسجيل وترحيل الحسابات</small></a><a class="module" href="#"><b>👥 العملاء</b><small>بيانات العملاء ومتابعة الحسابات</small></a><a class="module" href="#"><b>🏦 الحسابات والبنوك</b><small>الصندوق والبنوك والحسابات</small></a><a class="module" href="#"><b>📊 التقارير</b><small>الدخل والميزانية والمراجعة</small></a><a class="module" href="#"><b>⚙️ الإعدادات</b><small>المستخدمون والصلاحيات وبيانات الشركة</small></a></div></section>
-<div class="footer">شركة الرحمة للاستقدام ونقل الخدمات — نظام محاسبي تجريبي متجاوب</div>
-</main>
+<div id="loginView" class="login">
+  <div class="login-card">
+    <div class="logo">ر</div>
+    <h1>شركة الرحمة</h1>
+    <p>النظام المحاسبي — تسجيل الدخول للوصول إلى البيانات الفعلية في Supabase.</p>
+    <div id="loginMsg"></div>
+    <div class="field"><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="email"></div>
+    <div class="field" style="margin-top:10px"><label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password"></div>
+    <div class="actions"><button class="btn" id="loginBtn">دخول</button><button class="btn secondary" id="signupBtn">إنشاء حساب</button></div>
+  </div>
 </div>
+<div id="appView" class="app hidden">
+<aside class="side"><div class="brand"><div class="logo">ر</div><div><b>شركة الرحمة</b><small>للاستقدام ونقل الخدمات</small></div></div>
+<nav class="nav">
+<button class="active" data-page="dashboard">🏠 <span>الرئيسية</span></button>
+<button data-page="customers">👥 <span>العملاء</span></button>
+<button data-page="sales">🧾 <span>المبيعات والفواتير</span></button>
+<button data-page="purchases">🛒 <span>المشتريات</span></button>
+<button data-page="contracts">📋 <span>العقود</span></button>
+<button data-page="journal">📒 <span>القيود اليومية</span></button>
+<button data-page="reports">📊 <span>التقارير</span></button>
+<button id="logoutBtn">🚪 <span>خروج</span></button>
+</nav></aside>
+<main class="main">
+<header class="top"><div><h1 id="pageTitle">لوحة التحكم</h1><p>النظام المحاسبي — شركة الرحمة للاستقدام ونقل الخدمات</p></div><div class="user" id="userEmail">...</div></header>
+<div id="content"></div>
+<div class="footer">شركة الرحمة للاستقدام ونقل الخدمات — متصل بقاعدة بيانات Supabase</div>
+</main></div>
+<script>
+const SUPABASE_URL='https://bssvzwhyvjepcaqqsfps.supabase.co';
+const SUPABASE_KEY='sb_publishable_VzoyoqJX8lmSghID8UFb2w_ke-RsjUR';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let records=[], currentPage='dashboard';
+
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>new Intl.NumberFormat('ar-SA',{style:'currency',currency:'SAR',maximumFractionDigits:2}).format(Number(n)||0);
+const msg=(t,type='notice')=>'<div class="'+type+'">'+esc(t)+'</div>';
+
+async function loadRecords(){
+ const {data,error}=await sb.from('records').select('*').order('created',{ascending:false});
+ if(error){throw error} records=data||[];
+}
+async function ensureMember(){
+ const {data:{user}}=await sb.auth.getUser();
+ if(!user)return false;
+ const {data,error}=await sb.from('app_members').select('role').eq('user_id',user.id).maybeSingle();
+ if(error)return false;
+ return !!data;
+}
+async function boot(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session){showLogin();return}
+ const member=await ensureMember();
+ if(!member){showLogin(msg('تم تسجيل الدخول، لكن حسابك لم يُفعّل بعد كعضو في النظام. أضف المستخدم إلى app_members بصلاحية admin أو accountant من Supabase ثم أعد الدخول.'));return}
+ document.getElementById('userEmail').textContent=session.user.email;
+ document.getElementById('loginView').classList.add('hidden');document.getElementById('appView').classList.remove('hidden');
+ try{await loadRecords();render(currentPage)}catch(e){document.getElementById('content').innerHTML=msg('تعذر تحميل البيانات: '+e.message,'error')}
+}
+function showLogin(extra=''){document.getElementById('appView').classList.add('hidden');document.getElementById('loginView').classList.remove('hidden');document.getElementById('loginMsg').innerHTML=extra}
+async function auth(mode){
+ const email=document.getElementById('email').value.trim(), password=document.getElementById('password').value;
+ if(!email||!password){document.getElementById('loginMsg').innerHTML=msg('أدخل البريد وكلمة المرور.','error');return}
+ const r=mode==='login'?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
+ if(r.error){document.getElementById('loginMsg').innerHTML=msg(r.error.message,'error');return}
+ if(mode==='signup'){document.getElementById('loginMsg').innerHTML=msg('تم إنشاء الحساب. إذا كان تأكيد البريد مفعلاً، أكّد البريد ثم اطلب تفعيل العضوية من مدير النظام.');return}
+ boot();
+}
+document.getElementById('loginBtn').onclick=()=>auth('login');document.getElementById('signupBtn').onclick=()=>auth('signup');
+document.getElementById('logoutBtn').onclick=async()=>{await sb.auth.signOut();showLogin()};
+
+function render(page){
+ currentPage=page;
+ document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ const titles={dashboard:'لوحة التحكم',customers:'العملاء',sales:'المبيعات والفواتير',purchases:'المشتريات',contracts:'العقود',journal:'القيود اليومية',reports:'التقارير'};
+ document.getElementById('pageTitle').textContent=titles[page]||'النظام المحاسبي';
+ const c=document.getElementById('content');
+ if(page==='dashboard')return dashboard(c);
+ if(page==='customers')return listPage(c,'client','العملاء','عميل','name');
+ if(page==='sales')return listPage(c,'sale','فواتير المبيعات','فاتورة مبيعات','customer');
+ if(page==='purchases')return listPage(c,'purchase','فواتير المشتريات','فاتورة شراء','supplier');
+ if(page==='contracts')return listPage(c,'contract','العقود','عقد','customer');
+ if(page==='journal')return listPage(c,'entry','القيود اليومية','قيد يومي','description');
+ if(page==='reports')return reports(c);
+}
+function dashboard(c){
+ const clients=records.filter(x=>x.kind==='client'), sales=records.filter(x=>x.kind==='sale'), purchases=records.filter(x=>x.kind==='purchase');
+ const revenue=sales.reduce((a,x)=>a+Number(x.data?.total||x.data?.amount||0),0), cost=purchases.reduce((a,x)=>a+Number(x.data?.total||x.data?.amount||0),0);
+ c.innerHTML='<section class="hero"><div><h2>مرحباً بك في نظام الرحمة المحاسبي</h2><p>البيانات التالية تُقرأ مباشرة من قاعدة بيانات Supabase.</p></div></section>'+
+ '<section class="stats"><div class="stat">💰<small>إجمالي المبيعات</small><strong>'+money(revenue)+'</strong></div><div class="stat">🛒<small>إجمالي المشتريات</small><strong>'+money(cost)+'</strong></div><div class="stat">👥<small>العملاء</small><strong>'+clients.length+'</strong></div><div class="stat">📄<small>إجمالي السجلات</small><strong>'+records.length+'</strong></div></section>'+
+ '<section class="grid"><div class="card"><h3>آخر العمليات</h3>'+table(records.slice(0,10))+'</div><div class="card"><h3>الوحدات</h3><div class="form"><button class="btn" onclick="render('customers')">👥 العملاء</button><button class="btn" onclick="render('sales')">🧾 المبيعات</button><button class="btn" onclick="render('purchases')">🛒 المشتريات</button><button class="btn" onclick="render('journal')">📒 القيود</button></div></div></section>';
+}
+function table(rows){
+ if(!rows.length)return '<div class="empty">لا توجد بيانات بعد.</div>';
+ return '<div class="table-wrap"><table><thead><tr><th>النوع</th><th>الرقم</th><th>التاريخ</th><th>الوصف</th><th>المبلغ</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.kind)+'</td><td>'+esc(r.number||'-')+'</td><td>'+esc(r.date||'-')+'</td><td>'+esc(r.data?.name||r.data?.description||r.data?.customer||'-')+'</td><td>'+money(r.data?.total||r.data?.amount||0)+'</td></tr>').join('')+'</tbody></table></div>';
+}
+function listPage(c,kind,title,label,key){
+ const rows=records.filter(x=>x.kind===kind);
+ c.innerHTML='<section class="card"><div class="toolbar"><h3>'+title+'</h3><button class="btn" onclick="formPage(\''+kind+'\',\''+label+'\')">+ إضافة '+label+'</button></div>'+table(rows)+'</section>';
+}
+function formPage(kind,label){
+ const fields=kind==='client'?'<div class="field"><label>اسم العميل</label><input id="f_name"></div><div class="field"><label>الجوال</label><input id="f_phone"></div><div class="field"><label>الهوية / الإقامة</label><input id="f_id"></div><div class="field"><label>البريد</label><input id="f_email"></div>':
+ kind==='sale'||kind==='purchase'?'<div class="field"><label>الطرف</label><input id="f_party"></div><div class="field"><label>المبلغ</label><input id="f_amount" type="number" step="0.01"></div><div class="field"><label>الضريبة</label><input id="f_tax" type="number" step="0.01" value="0"></div><div class="field"><label>الوصف</label><input id="f_desc"></div>':
+ kind==='contract'?'<div class="field"><label>العميل</label><input id="f_party"></div><div class="field"><label>قيمة العقد</label><input id="f_amount" type="number" step="0.01"></div><div class="field"><label>الحالة</label><select id="f_status"><option value="active">نشط</option><option value="draft">مسودة</option><option value="completed">مكتمل</option></select></div><div class="field"><label>ملاحظات</label><input id="f_desc"></div>':
+ '<div class="field"><label>وصف القيد</label><input id="f_desc"></div><div class="field"><label>المبلغ</label><input id="f_amount" type="number" step="0.01"></div>';
+ document.getElementById('content').innerHTML='<section class="card"><h3>إضافة '+label+'</h3><div class="form">'+fields+'</div><div id="saveMsg"></div><div class="actions"><button class="btn" onclick="saveRecord(\''+kind+'\')">حفظ</button><button class="btn secondary" onclick="render(\''+currentPage+'\')">إلغاء</button></div></section>';
+}
+async function saveRecord(kind){
+ const now=new Date(), amount=Number(document.getElementById('f_amount')?.value||0), tax=Number(document.getElementById('f_tax')?.value||0);
+ const data=kind==='client'?{name:document.getElementById('f_name').value,phone:document.getElementById('f_phone').value,national_id:document.getElementById('f_id').value,email:document.getElementById('f_email').value}:
+ {description:document.getElementById('f_desc')?.value||'',party:document.getElementById('f_party')?.value||'',amount,total:amount+tax,tax,status:document.getElementById('f_status')?.value||'posted'};
+ const prefix={client:'CUS',sale:'SAL',purchase:'PUR',contract:'CON',entry:'ENT'}[kind];
+ const row={kind,number:prefix+'-'+Date.now().toString().slice(-7),date:now.toISOString().slice(0,10),data,created:Date.now()};
+ const {data:authData}=await sb.auth.getUser();row.created_by=authData.user.id;
+ const {error}=await sb.from('records').insert(row);
+ if(error){document.getElementById('saveMsg').innerHTML=msg(error.message,'error');return}
+ await loadRecords();render(currentPage);
+}
+function reports(c){
+ const sales=records.filter(x=>x.kind==='sale').reduce((a,x)=>a+Number(x.data?.total||0),0);
+ const purchases=records.filter(x=>x.kind==='purchase').reduce((a,x)=>a+Number(x.data?.total||0),0);
+ c.innerHTML='<section class="card"><h3>ملخص مالي</h3><div class="stats"><div class="stat"><small>المبيعات</small><strong>'+money(sales)+'</strong></div><div class="stat"><small>المشتريات</small><strong>'+money(purchases)+'</strong></div><div class="stat"><small>صافي الحركة</small><strong>'+money(sales-purchases)+'</strong></div></div></section>';
+}
+document.querySelectorAll('.nav button[data-page]').forEach(b=>b.onclick=()=>render(b.dataset.page));
+boot();
+</script>
 </body>
 </html>
